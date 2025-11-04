@@ -1,0 +1,301 @@
+"""""Algoritmo de Euclides.
+El presente algoritmo es usado para el maximo comun divisor (MCD) pero la formula es la de euclides el metodo eficiente del 
+algoritmo."""
+
+"""El MCD de dos números se obtiene dividiendo el número mayor entre el menor,
+tomando el residuo de esa división,
+y repitiendo el proceso (sustituyendo el mayor por el menor y el menor por el residuo),
+hasta que el residuo sea cero.
+El último divisor distinto de cero es el MCD"""
+
+
+#libreria para busqueda binaria
+import random
+
+#Recursivo
+def mcd_recursivo(a,b):
+    #caso base si el mcd es c0 el mcd es a
+    if b==0:
+        return a
+    elif(b>a):
+        a,b=b,a
+        
+        return mcd_recursivo(b,a%b)
+        
+    #caso recursivo llama la funcion modificando el valor de a por b y el residuo por b como dice la formula
+    else:
+        return mcd_recursivo(b,a%b)
+    
+    
+
+
+#Metodo Iterativo
+def mcd_iterativo(a,b):
+    resto=0
+    
+    #si a<b intercambiamos los valores para que siempre a sea el mayor de losdos numeros
+    if a<b:
+        a,b=b,a 
+        
+    #Usamos un bucle while para que la operacion se realise hasta llegar a cero el residuo
+    while b !=0:
+        resto=a%b
+        #intercambiamos los valores segun la formula de euclides
+        a=b
+        b=resto
+    
+        #Cuando 'b' sea 0 retornamos 'a' y este sara el MCD ya que 'a' segun la formula el es residuo anterior a cero
+    return a
+
+import random
+
+"""La busqueda binaria es un Algoritmo que se encarga de buscar un elemento en una lista por el metodo de divide y venceras
+saparando la lista en sublistas mas pequeñas hasta llegar al elemento pero la lista debe de estar ordenada, si no se encuentra se imprime -1 o no se encontro"""
+
+
+#Busqueda binaria
+def busqueda_binaria(lista,objetivo):
+    # buscamos el objetivo en la lista pero la lista debe de estar ordenada
+    # definimos los limites iniciales del rango de busqueda
+    inicio_rango = 0
+    fin_rango = len(lista)-1
+    
+    # Ponemos un bucle while el cual seguira mientras el rango de busqueda sea valido
+    while inicio_rango <= fin_rango:
+        # calculamos el medio o elemento central de la lista
+        lista_medio = (inicio_rango + fin_rango) // 2
+        
+        # obtenemos el valor del indice central
+        elemento_medio = lista[lista_medio]
+        
+        # comparamos por parte derecha e izquirda tomando el elemento central como referencia para crear la sub lista
+        
+        # ERROR CORREGIDO #1: La comparación estaba mal. Debe ser 'elemento_medio == objetivo'.
+        if elemento_medio == objetivo:
+            return lista_medio # Retorna el índice si lo encuentra.
+            
+        # ERROR CORREGIDO #2: El caso '<' debe apuntar a la DERECHA, por lo que actualiza inicio_rango.
+        elif elemento_medio < objetivo:
+            # si el elemento del medio es menor que el objetivo, el objetivo debe de estar por la derecha
+            inicio_rango = lista_medio + 1
+            
+        else:
+            # si no es el caso (elemento_medio > objetivo), el objetivo debe de estar por a izquierda
+            fin_rango = lista_medio - 1
+            
+    # ERROR CORREGIDO #3: El return -1 debe ir FUERA del bucle while.
+    return -1 # El objetivo no fue encontrado
+
+    
+"""Metodo para la busqueda binaria el cual sera el menu para pedri la lista y ordenarla asi como pedir el objetivo y luego mostrar 
+si se encuentra el elemento en la lista. """
+def ejecutar_busqueda_binaria():
+    print("----Busqueda binaria Iterativa----")
+    
+    # ERROR CORREGIDO #4: Faltaba llamar al método .lower() con paréntesis ().
+    opcion = input("¿Desea usar la lista predeterminada en el programa (100 elementos, rango 1-500)? (s/n): ").lower()
+    
+    # Valores por defecto para manejar errores o la opción predefinida.
+    tamaño_lista, rango_minimo, rango_maximo = 100, 1, 1000 
+    
+    if opcion == 's':
+        # esto sera una lista predefinida para la busqueda binaria
+        # Los valores ya están definidos arriba, pero se imprimen aquí.
+        print(f"Usando la lista predefinida. Tamaño de lista:{tamaño_lista}, Rango de numeros para la lista:{rango_minimo} a {rango_maximo}.")
+    else:
+        # ponemos para excepciones para tener un limite en la lista que el usuario ingreso
+        try:
+            tamaño_lista = int(input("Ingrese el tamaño de la lista (ejemplo=50 elementos): "))
+            rango_minimo = int(input("Ingrese el rango minimo para los numeros aleatorios para la lista (ejemplo 1): "))
+            rango_maximo = int(input("Ingrese el valor maximo para los numeros aleatorios (ejemplo 500): "))
+            
+            # regla para la maxima lista que puede ingresar el usuario
+            if tamaño_lista <= 0 or rango_minimo >= rango_maximo:
+                print("Error de parametros. Usaremos valores predefinidos.")
+                tamaño_lista, rango_minimo, rango_maximo = 100, 1, 1000
+                
+        except ValueError:
+            print("Entrada invalida.Usando valores predefinidos.")
+            tamaño_lista, rango_minimo, rango_maximo = 100, 1, 1000
+            
+    # En esta parte generamos y ordenamos la lista
+    # lista con parametros predefinidos
+    # ERROR CORREGIDO #5: La variable de iteración en la comprensión de lista era 'a', la cambié a '_'.
+    lista_original = [random.randint(rango_minimo, rango_maximo) for _ in range(tamaño_lista)]
+    
+    # ordenamos la lista para la busqueda binaria usando Timsort el cual en phyton ya esta optimisado y es O(n log n)
+    lista_ordenada = sorted(lista_original)
+    
+    print("La lista se genero y ordeno de menor a mayor.")
+    
+    # ERROR CORREGIDO #6: Esta línea era redundante, la variable ya estaba definida en el IF/ELSE.
+    # tamaño_lista = len(lista_ordenada) 
+    
+    # parte para mostrar algunos elementos de la lista
+    elementos_a_mostrar = min(20, len(lista_ordenada))
+    # mostramos todos o lagunos elementos de la lista si desea el usuario
+    print(f"Tamaño total de la lista:{len(lista_ordenada)}")
+    print(f"Primeros elementos de la lista {elementos_a_mostrar} elementos: {lista_ordenada[:elementos_a_mostrar]}")
+    
+    # preguntamos si quiere ver toda la lista
+    mostrar_lista = input("\n ¿Desea ver la lista completa? (s/n):").upper()
+    
+    if mostrar_lista == 'S':
+        print("\n Lista completa:")
+        print(lista_ordenada)
+        print("\n")
+        
+    try:
+        objetivo = int(input("\nIngrese el numero que desea buscar en la lista: "))
+    except ValueError:
+        print("Error por favor ingrese un numero entero valido.")
+        return
+    
+    # Realizamos la busqueda binaria
+    posicion = busqueda_binaria(lista_ordenada, objetivo)
+    
+    # Mostramos los resultados
+    print("\n----Resultados de la busqueda ----")
+    
+    # ERROR CORREGIDO #7: El valor de "no encontrado" es -1, no 1.
+    if posicion != -1:
+        print(f"El número  {objetivo} fue encontrado.")
+        print(f"Posicion o indice de la lista ordenada:{posicion}")
+        print(f"Elemento en esa posicion:{lista_ordenada[posicion]}.")
+        print("\n")
+    else:
+        print(f"El número {objetivo} no se encuentra en la lista (Resultado: {posicion}).")
+        print("\n")
+
+    
+    
+
+
+"""Algoritmos para la suma de Digitos  dado unn numero n este se sumara cada elemento del numero
+como ejemplo 1234=1+2+3+4=10 aplicandolo en metodo recursivo e iterativo."""
+
+#suma de digitos Recursiva
+#nos basamos en la suma de (n)=(n(mod 10))+suma de digitos(n//10)
+
+def suma_digito_recursivo(n):
+    #caso base donde si es cero o si es un numero de una cifra
+    if n<10:
+        return n
+    #caso recursivo
+    else:
+        #n%10 se obtiene el ultimo digito
+        ultimo_digito=n%10
+        #n//10 elimina el iltimo digito es una divicion entera
+        resto_del_numero=n//10
+        return ultimo_digito + suma_digito_recursivo(resto_del_numero)
+
+
+#Suma de numeros Iterativa
+
+def suma_digitos_iterativa(n):
+    #inicialisamos la suma en cero
+    suma=0
+    #usaremos un bucle while para realisar la suma mientras que el numero introducido sea mayor a cero
+    while n>0:
+        #obtenemos el ultimo digito como en el anterior codigo con modulo
+        ultimo_digito=n%10
+        #lo sumamos y lo acumulamos
+        suma +=ultimo_digito
+        #Eliminamos el ultimo digito para la nueva suma y es division entera con uso ce (n//10)
+        n//=10 #esto equivale a n=n//10
+    return suma
+
+
+def ejecutar_mcd_interaccion(metodo):
+    """Maneja la entrada de datos y la ejecución del MCD (Recursivo o Iterativo)."""
+    nombre_metodo = "Recursivo" if metodo == 'r' else "Iterativo"
+    
+    try:
+        print(f"\n--- MCD - Método {nombre_metodo} ---")
+        num1 = int(input("Introduzca el primer número: "))
+        num2 = int(input("Introduzca el segundo número: "))
+    except ValueError:
+        print("Error: Por favor, ingrese números enteros válidos.")
+        return
+
+    if metodo == 'r':
+        resultado = mcd_recursivo(num1, num2)
+    else:
+        resultado = mcd_iterativo(num1, num2)
+        
+    print(f"El MCD de {num1} y {num2} usando el método {nombre_metodo} es: {resultado}.")
+
+
+def ejecutar_suma_digitos_interaccion(metodo):
+    """Maneja la entrada de datos y la ejecución de Suma de Dígitos."""
+    nombre_metodo = "Recursivo" if metodo == 'r' else "Iterativo"
+    
+    try:
+        print(f"\n--- Suma de Dígitos - Método {nombre_metodo} ---")
+        n = int(input("Ingrese el número N a sumar sus dígitos: "))
+    except ValueError:
+        print("Error: Por favor, ingrese un número entero válido.")
+        return
+    
+    # Aseguramos que se use el valor absoluto si es negativo para la suma de dígitos
+    n_abs = abs(n) 
+    
+    if metodo == 'r':
+        resultado = suma_digito_recursivo(n_abs)
+    else:
+        resultado = suma_digitos_iterativa(n_abs)
+        
+    print(f"La suma de los dígitos individuales del número {n} (valor absoluto) usando {nombre_metodo} es: {resultado}")
+
+
+def mostrar_menu_plano():
+    """Imprime todas las opciones ejecutables del programa en un solo bloque."""
+    print("\n" + "="*60)
+    print("           MENÚ DE ALGORITMOS RECURSIVOS E ITERATIVOS")
+    print("="*60)
+    print("1. Máximo Común Divisor (MCD) - Método Recursivo")
+    print("2. Máximo Común Divisor (MCD) - Método Iterativo")
+    print("-" * 60)
+    print("3. Búsqueda Binaria - Método Iterativo (con generación de lista)")
+    print("-" * 60)
+    print("4. Suma de Dígitos (N) - Método Recursivo")
+    print("5. Suma de Dígitos (N) - Método Iterativo")
+    print("="*60)
+    print("0. Salir del programa")
+    print("="*60)
+
+
+def main_menu():
+    """Función principal que ejecuta el bucle del menú interactivo."""
+    while True:
+        # Muestra todas las opciones al usuario
+        mostrar_menu_plano()
+        
+        # Pide la selección
+        eleccion = input("Ingrese el número de su opción: ")
+        
+        # Maneja la elección del usuario
+        if eleccion == '1':
+            ejecutar_mcd_interaccion('r') # Llama al MCD recursivo
+        elif eleccion == '2':
+            ejecutar_mcd_interaccion('i') # Llama al MCD iterativo
+        elif eleccion == '3':
+            # La función ejecutar_busqueda_binaria ya maneja toda la lógica I/O
+            ejecutar_busqueda_binaria() 
+        elif eleccion == '4':
+            ejecutar_suma_digitos_interaccion('r') # Llama a la Suma de Dígitos recursiva
+        elif eleccion == '5':
+            ejecutar_suma_digitos_interaccion('i') # Llama a la Suma de Dígitos iterativa
+        elif eleccion == '0':
+            print("\nSaliendo del programa. ¡Hasta luego!")
+            break
+        else:
+            print("\nOpción no válida. Por favor, ingrese el número de una opción del menú.")
+
+
+if __name__ == "__main__":
+    """
+    Punto de entrada principal del programa. 
+    Llama a la función main_menu para iniciar el menú interactivo.
+    """
+    main_menu()
